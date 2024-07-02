@@ -362,10 +362,11 @@ private:
 
         // Issue appropriate warning
         if (m_check == CT_INITIAL) {
-            nodep->v3warn(INITIALDLY,
-                          "Non-blocking assignment '<=' in initial/final block\n"
-                              << nodep->warnMore()
-                              << "... This will be executed as a blocking assignment '='!");
+            if (v3Global.opt.timing().isSetFalse()) {
+                nodep->v3warn(E_NOTIMING,
+                              "Delayed assignment in an initial/final block requires --timing");
+            }
+            return;
         } else {
             nodep->v3warn(COMBDLY,
                           "Non-blocking assignment '<=' in combinational logic process\n"
